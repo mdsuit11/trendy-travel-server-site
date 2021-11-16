@@ -3,8 +3,8 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
 var admin = require("firebase-admin");
+const ObjectId = require('mongodb').ObjectId;
 
-// const objectId = require('mongodb').objectId;
 
 
 const app = express();
@@ -119,11 +119,11 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
                
             })
             // pathano/ 
-            app.post('/orders ', async (req, res) => {
+            // app.post('/orders' , asy)
+            app.post('/orders', async (req, res) => {
                 const order = req.body;
                 const result = await ordersCollection.insertOne(order);
-                order.createdAt = new Date();
-                console.log('oreder okk', order);
+                console.log(result);
                 res.json(result)
             }) 
                 // pathabo
@@ -133,12 +133,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
                 res.send(order);
             })
             // delete item
-            app.delete('/orders:id', async (req, res)=>{
+            app.delete('/orders/:id', async (req, res)=> {
                 const id = req.params.id;
-                 const query = {_id: objectId(id)};
-                 const result = await ordersCollection.deleteOne(query);
-                 console.log(result);
-            })
+                const query = {_id: ObjectId(id)};
+                const result = await ordersCollection.deleteOne(query);
+                console.log(result);
+                res.json(result)
+              
+              });
 
         }
         finally{
